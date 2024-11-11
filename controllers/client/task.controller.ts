@@ -33,6 +33,15 @@ export const index = async (req: Request, res: Response) => {
     const skip = (page - 1) * limitItems;
 
     // End pagination
+
+    // Search
+    if(req.query.keyword) {
+        const regex = new RegExp(`${req.query.keyword}`, "i");
+        find["title"] = regex;
+    }
+
+    // End search
+
     const tasks = await Task
         .find(find)
         .limit(limitItems)
@@ -52,4 +61,20 @@ export const detail = async (req: Request, res: Response) => {
     });
 
     res.json(task);
+}
+
+export const changeMultiPatch = async ( req: Request, res: Response ) => {
+    const status = req.body.status;
+    const ids = req.body.ids;
+
+    await Task.updateMany({
+        _id: { $in: ids }
+    }, {
+        status: status
+    });
+
+    res.json({
+        code: "success",
+        message: "Successful!"
+    })
 }

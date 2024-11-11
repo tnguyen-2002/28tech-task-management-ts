@@ -5,10 +5,15 @@ dotenv.config();
 import { connect } from "./config/database";
 connect();
 
+import bodyParser from "body-parser";
+
 import { routesClient } from "./routes/client/index.route";
 
 const app: Express = express();
 const port: String = process.env.PORT;
+
+// parse application/json
+app.use(bodyParser.json());
 
 routesClient(app);
 
