@@ -2,10 +2,27 @@ import  { Request, Response } from "express";
 import { Task } from "../../models/task.model";
 
 export const index = async (req: Request, res: Response) => {
-    const tasks = await Task.find({
+    const find = {
         deleted: false
-    });
+    };
 
+    if(req.query.status) {
+        find["status"] = req.query.status;
+    }
+
+    // Sort
+    const sort = {};
+    if(req.query.sortKey && req.query.sortValue) {
+        sort[`${req.query.sortKey}`] = req.query.sortValue;
+      }
+
+    // End sort
+
+    const tasks = await Task
+        .find(find)
+        .sort(sort);
+    
+        
     res.json(tasks);
 }
 
