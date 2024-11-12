@@ -87,7 +87,37 @@ export const createTask = async ( req: Request, res: Response ) => {
 
     res.json({
         code: "success",
-        message: "Create task successfuly!",
+        message: "Create task successfully!",
         data: task
+    })
+}
+
+export const updateTask = async ( req: Request, res: Response ) => {
+    const id = req.body.id;
+    const data = req.body;
+
+    await Task.updateOne({
+        _id: id
+    }, data)
+
+    res.json({
+        code: "success",
+        message: "Update task successfully",
+    })
+}
+
+
+export const deleteTask = async ( req: Request, res: Response ) => {
+    const ids = req.body.ids;
+    
+    await Task.updateMany({
+        _id: { $in: ids }
+    },{
+        deleted: true
+    })
+
+    res.json({
+        code: "success",
+        message: "Delete task successfully!"
     })
 }
