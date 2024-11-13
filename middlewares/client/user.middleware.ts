@@ -11,7 +11,7 @@ export const requireAuth = async (
     if(!req.headers.authorization || 
         !req.headers.authorization.startsWith("Bearer "
     )){
-        res.status(400).json({
+        res.status(401).json({
             code: "error",
             message: "Please include a token!"
         });
@@ -29,7 +29,7 @@ export const requireAuth = async (
 
     //* 4.Handle invalid token
     if( !userData ) {
-        res.json({
+        res.status(401).json({
             code: "error",
             message: "Invalid token"
         });
