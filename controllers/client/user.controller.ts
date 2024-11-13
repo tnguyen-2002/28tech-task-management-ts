@@ -4,9 +4,8 @@ import bcrypt from 'bcrypt';
 import { generateRandomString } from "../../helpers/generate.helper";
 
 export const register = async (req: Request, res: Response) => {
-    // 1. tao bien nhan data tu req.body
     const user = req.body;
-    // 2. Kiem tra email da ton tai chua
+
     const userExit = await User.findOne({
         email: user.email,
         deleted: false
@@ -19,7 +18,7 @@ export const register = async (req: Request, res: Response) => {
           });
           return;
     }
-    // 3. tao bien nhan data de ma hoa
+
     const hashPassword = await bcrypt.hash(user.password, 10)
     const dataUser = {
         fullName: user.fullName,
@@ -28,14 +27,45 @@ export const register = async (req: Request, res: Response) => {
         token: generateRandomString(30)
     };
 
-    // 4. them vao co so du lieu
     const newUser = new User(dataUser);
     await newUser.save();
     
-    // 5. Tra ket qua ra console
     res.json({
         code: "success",
         message: "Registration successful!",
         token: newUser.token
       });
+}
+
+export const login = async ( req: Request, res: Response ) => {
+    const userEmail = req.body.email;
+    const userPassword = req.body.password;
+
+    const userExit = await User.findOne({
+        email: userEmail,
+        deleted: false
+    })
+
+    if(!userExit){
+        res.json({
+            code: "error",
+            message: "Email doesn't exist in the database!"
+        });
+        return;
+    }
+
+    const isPasswordValid = await bcrypt.compare(userPassword, userExit.password);
+    if(!isPasswordValid){
+        res.json({
+            code: "error",
+            message: "Wrong password!"
+        });
+        return;
+    }
+
+    res.json({
+        code: "error",
+        message: "Login successfully!",
+        token: userExit.token
+    })
 }
