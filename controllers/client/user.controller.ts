@@ -64,8 +64,44 @@ export const login = async ( req: Request, res: Response ) => {
     }
 
     res.json({
-        code: "error",
+        code: "success",
         message: "Login successfully!",
         token: userExit.token
+    })
+}
+
+export const profile = async ( req: Request, res: Response ) => {
+    // 1. Lay token tu du lieu dau vao
+    const token = req.body.token;
+
+    // 2. Kiem tra co token co bi rong khong
+    if ( !token ) {
+        res.json({
+            code: "error",
+            message: "Token is empty!"
+        });
+        return;
+    }
+
+    // 3. Lay thong tin nguoi dung tu token dau vao
+    const userData = await User.findOne({
+        token: token,
+        deleted: false
+    }).select("_id fullName email");
+
+    // 4. Neu khong co user thi bao token khong hop le
+    if ( !userData ) {
+        res.json({
+            code: "error",
+            message: "Invalid token!"
+        })
+        return;
+    }
+
+    // 5. Tra ket qua
+    res.json({
+        code: "success",
+        message: "Success!",
+        data: userData
     })
 }

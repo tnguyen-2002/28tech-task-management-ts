@@ -7,4 +7,6 @@ router.get("/register", controller.register);
 
 router.get("/login", controller.login);
 
+router.get("/profile", controller.profile);
+
 export const userRoute = router;
