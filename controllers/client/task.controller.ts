@@ -44,13 +44,14 @@ export const index = async (req: Request, res: Response) => {
 
     const tasks = await Task
         .find(find)
-        .limit(limitItems)
-        .skip(skip)
+        // .limit(limitItems)
+        // .skip(skip)
         .sort(sort);
     
 
     res.json(tasks);
 }
+
 
 export const detail = async (req: Request, res: Response) => {
     const id: String = req.params.id;
@@ -62,6 +63,7 @@ export const detail = async (req: Request, res: Response) => {
 
     res.json(task);
 }
+
 
 export const changeMultiPatch = async ( req: Request, res: Response ) => {
     const status = req.body.status;
@@ -79,6 +81,7 @@ export const changeMultiPatch = async ( req: Request, res: Response ) => {
     })
 }
 
+
 export const createTask = async ( req: Request, res: Response ) => {
     const data = req.body;
 
@@ -91,6 +94,7 @@ export const createTask = async ( req: Request, res: Response ) => {
         data: task
     })
 }
+
 
 export const updateTask = async ( req: Request, res: Response ) => {
     const id = req.body.id;
@@ -121,3 +125,4 @@ export const deleteTask = async ( req: Request, res: Response ) => {
         message: "Delete task successfully!"
     })
 }
+
